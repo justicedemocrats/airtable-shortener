@@ -2,13 +2,12 @@ defmodule Shorten.GetController do
   use Shorten.Web, :controller
 
   def get(conn = %{request_path: path}, _params) do
-    %{"metadata" => %{"route" => route}} = Cosmic.get("bnc-routes")
     path = String.downcase(path)
+    routes = Shorten.AirtableCache.get_all()
 
     tuple_or_nil =
-      route
-      |> Enum.map(&prepare/1)
-      |> Enum.filter(&(matches(&1, path)))
+      routes
+      |> Enum.filter(&matches(&1, path))
       |> List.first()
 
     destination =
@@ -17,15 +16,10 @@ defmodule Shorten.GetController do
         {_, destination} -> destination
       end
 
-    redirect conn, external: destination
+    redirect(conn, external: destination)
   end
 
   defp matches({regex, destination}, path) do
     Regex.run(regex, path) != nil
-  end
-
-  defp prepare(%{"from" => from_regex, "to" => to_url}) do
-    {:ok, from} = from_regex |> String.downcase() |> Regex.compile()
-    {from, to_url}
   end
 end

@@ -6,14 +6,11 @@ defmodule Shorten do
   def start(_type, _args) do
     import Supervisor.Spec
 
-    Cosmic.fetch_all()
-
     # Define workers and child supervisors to be supervised
     children = [
       # Start the endpoint when the application starts
       supervisor(Shorten.Endpoint, []),
-      # Start your own worker by calling: Shorten.Worker.start_link(arg1, arg2, arg3)
-      # worker(Shorten.Worker, [arg1, arg2, arg3]),
+      worker(Shorten.AirtableCache, [])
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html

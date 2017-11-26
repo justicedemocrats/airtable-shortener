@@ -10,8 +10,7 @@ config :shorten, Shorten.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "bi+10FTfGA0JOCq8AqQq7dayelDlVi/u3fJ479UIT9UY5bmnBo63p4HBQp1ZEbLB",
   render_errors: [view: Shorten.ErrorView, accepts: ~w(json)],
-  pubsub: [name: Shorten.PubSub,
-           adapter: Phoenix.PubSub.PG2]
+  pubsub: [name: Shorten.PubSub, adapter: Phoenix.PubSub.PG2]
 
 # Configures Elixir's Logger
 config :logger, :console,
@@ -20,4 +19,4 @@ config :logger, :console,
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
-import_config "#{Mix.env}.exs"
+import_config "#{Mix.env()}.exs"
