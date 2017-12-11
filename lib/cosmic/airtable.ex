@@ -4,6 +4,7 @@ defmodule Shorten.AirtableCache do
   @key Application.get_env(:shorten, :airtable_key)
   @base Application.get_env(:shorten, :airtable_base)
   @table Application.get_env(:shorten, :airtable_table_name)
+  @view "Grid view"
 
   @interval 60_000
 
@@ -42,7 +43,7 @@ defmodule Shorten.AirtableCache do
     %{body: body} =
       HTTPotion.get("https://api.airtable.com/v0/#{@base}/#{@table}", headers: [
         Authorization: "Bearer #{@key}"
-      ])
+      ], query: %{view: @view})
 
     decoded = Poison.decode!(body)
 
@@ -67,7 +68,7 @@ defmodule Shorten.AirtableCache do
         headers: [
           Authorization: "Bearer #{@key}"
         ],
-        query: [offset: offset]
+        query: [offset: offset, view: @view]
       )
 
     decoded = Poison.decode!(body)
