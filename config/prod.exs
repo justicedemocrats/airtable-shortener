@@ -27,4 +27,4 @@ config :shorten,
   airtable_key: "${AIRTABLE_KEY}",
   airtable_base: "${AIRTABLE_BASE}",
   airtable_table_name: "${AIRTABLE_TABLE}",
-  update_secret: "${UPDATE_SECRET}"
+  secret: "${UPDATE_SECRET}"
