@@ -20,7 +20,7 @@ defmodule Shorten.Mixfile do
   def application do
     [
       mod: {Shorten, []},
-      applications: [:phoenix, :phoenix_pubsub, :cowboy, :logger, :gettext, :httpotion, :stash]
+      extra_applications: [:logger]
     ]
   end
 
@@ -38,7 +38,6 @@ defmodule Shorten.Mixfile do
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 1.0"},
       {:httpotion, "~> 3.0.2"},
-      {:stash, "~> 1.0.0"},
       {:quantum, ">= 2.2.1"},
       {:timex, "~> 3.0"},
       {:distillery, "~> 1.4", runtime: false}
