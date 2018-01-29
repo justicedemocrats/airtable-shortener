@@ -34,7 +34,8 @@ defmodule Shorten.AirtableCache do
         headers: [
           Authorization: "Bearer #{key()}"
         ],
-        query: %{view: @view}
+        query: %{view: @view},
+        timeout: :infinity
       )
 
     decoded = Poison.decode!(body)
@@ -60,7 +61,8 @@ defmodule Shorten.AirtableCache do
         headers: [
           Authorization: "Bearer #{key()}"
         ],
-        query: [offset: offset, view: @view]
+        query: [offset: offset, view: @view],
+        timeout: :infinity
       )
 
     decoded = Poison.decode!(body)
