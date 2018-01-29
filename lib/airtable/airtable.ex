@@ -1,16 +1,12 @@
 defmodule Shorten.AirtableCache do
   use Agent
 
-  @key Application.get_env(:shorten, :airtable_key)
-  @base Application.get_env(:shorten, :airtable_base)
-  @table Application.get_env(:shorten, :airtable_table_name)
+  def key, do: Application.get_env(:shorten, :airtable_key)
+  def base, do: Application.get_env(:shorten, :airtable_base)
+  def table, do: Application.get_env(:shorten, :airtable_table_name)
   @view "Grid view"
 
-  @interval 60_000
-
   def start_link do
-    queue_update()
-
     Agent.start_link(
       fn ->
         fetch_all() |> Enum.map(&regexify/1)
@@ -19,20 +15,12 @@ defmodule Shorten.AirtableCache do
     )
   end
 
-  def queue_update do
-    spawn(fn ->
-      :timer.sleep(@interval)
-      update()
-    end)
-  end
-
   def update() do
     Agent.update(__MODULE__, fn _current ->
       fetch_all() |> Enum.map(&regexify/1)
-    end)
+    end, 20_000)
 
     IO.puts("Updated at #{inspect(DateTime.utc_now())}")
-    queue_update()
   end
 
   def get_all do
@@ -41,9 +29,13 @@ defmodule Shorten.AirtableCache do
 
   defp fetch_all() do
     %{body: body} =
-      HTTPotion.get("https://api.airtable.com/v0/#{@base}/#{@table}", headers: [
-        Authorization: "Bearer #{@key}"
-      ], query: %{view: @view})
+      HTTPotion.get(
+        "https://api.airtable.com/v0/#{base()}/#{table()}",
+        headers: [
+          Authorization: "Bearer #{key()}"
+        ],
+        query: %{view: @view}
+      )
 
     decoded = Poison.decode!(body)
 
@@ -64,9 +56,9 @@ defmodule Shorten.AirtableCache do
   defp fetch_all(records, offset) do
     %{body: body} =
       HTTPotion.get(
-        "https://api.airtable.com/v0/#{@base}/#{@table}",
+        "https://api.airtable.com/v0/#{base()}/#{table()}",
         headers: [
-          Authorization: "Bearer #{@key}"
+          Authorization: "Bearer #{key()}"
         ],
         query: [offset: offset, view: @view]
       )

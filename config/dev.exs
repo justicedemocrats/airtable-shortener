@@ -18,6 +18,12 @@ config :shorten, Shorten.Endpoint,
 # Do not include metadata nor timestamps in development logs
 config :logger, :console, format: "[$level] $message\n"
 
+config :shorten,
+  airtable_key: System.get_env("AIRTABLE_KEY"),
+  airtable_base: System.get_env("AIRTABLE_BASE"),
+  airtable_table_name: System.get_env("AIRTABLE_TABLE"),
+  secret: System.get_env("UPDATE_SECRET")
+
 # Set a higher stacktrace during development. Avoid configuring such
 # in production as building large stacktraces may be expensive.
 config :phoenix, :stacktrace_depth, 20

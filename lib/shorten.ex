@@ -10,7 +10,8 @@ defmodule Shorten do
     children = [
       # Start the endpoint when the application starts
       supervisor(Shorten.Endpoint, []),
-      worker(Shorten.AirtableCache, [])
+      worker(Shorten.AirtableCache, []),
+      worker(Shorten.Scheduler, [])
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
