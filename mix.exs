@@ -40,6 +40,7 @@ defmodule Shorten.Mixfile do
       {:httpotion, "~> 3.0.2"},
       {:stash, "~> 1.0.0"},
       {:quantum, ">= 2.2.1"},
+      {:timex, "~> 3.0"},
       {:distillery, "~> 1.4", runtime: false}
     ]
   end
