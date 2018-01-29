@@ -28,17 +28,15 @@ defmodule Shorten.GetController do
     if input_secret == secret() do
       resp =
         Shorten.AirtableCache.get_all()
-        |> Enum.map(routes, fn {regex, destination} ->
-          "\t\t\t#{regex} -> #{destination}"
+        |> Enum.map(fn {regex, destination} ->
+          "\t\t\t#{inspect(regex)} -> #{destination}"
         end)
         |> Enum.join("\n")
 
       text conn, ~s(
         hello shortlink user! here are the current routes.
 
-        to force an update, visit jdems.us/admin/update?secret=#{secret}.
-
-        #{resp}
+        to force an update, visit jdems.us/admin/update?secret=#{secret}.\n\n#{resp}
       )
     else
       text conn, ~s(
@@ -53,7 +51,7 @@ defmodule Shorten.GetController do
     )
   end
 
-  def force_update(conn, %{"secret" => input_secret}) do
+  def update(conn, %{"secret" => input_secret}) do
     if input_secret == secret() do
       Shorten.AirtableCache.update()
 
@@ -70,7 +68,7 @@ defmodule Shorten.GetController do
     end
   end
 
-  def force_update(conn, _) do
+  def update(conn, _) do
     text conn, ~s(
       missing secret – proper usage is jdems.us/admin/update?secret=secretfromben
     )
