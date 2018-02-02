@@ -40,7 +40,8 @@ defmodule Shorten.Mixfile do
       {:httpotion, "~> 3.0.2"},
       {:quantum, ">= 2.2.1"},
       {:timex, "~> 3.0"},
-      {:distillery, "~> 1.4", runtime: false}
+      {:distillery, "~> 1.4", runtime: false},
+      {:airtable_config, git: "https://github.com/justicedemocrats/airtable_config.git"}
     ]
   end
 end
