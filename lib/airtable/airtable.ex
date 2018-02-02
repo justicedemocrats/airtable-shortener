@@ -13,7 +13,7 @@ defmodule Shorten.AirtableCache do
   end
 
   def process_record(%{"fields" => fields}) do
-    pattern = fields["Pattern"] |> String.downcase() |> Regex.compile()
+    {:ok, pattern} = fields["Pattern"] |> String.downcase() |> Regex.compile()
     {pattern, fields["Destination"]}
   end
 end
