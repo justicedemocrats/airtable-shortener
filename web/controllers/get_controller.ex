@@ -13,14 +13,14 @@ defmodule Shorten.GetController do
 
     destination =
       case tuple_or_nil do
-        nil -> "https://justicedemocrats.com"
+        nil -> default_redirect(path)
         {_, destination} -> destination
       end
 
     redirect(conn, external: destination)
   end
 
-  defp matches({regex, destination}, path) do
+  defp matches({regex, _destination}, path) do
     Regex.run(regex, path) != nil
   end
 
@@ -36,7 +36,7 @@ defmodule Shorten.GetController do
       text conn, ~s(
         hello shortlink user! here are the current routes.
 
-        to force an update, visit jdems.us/admin/update?secret=#{secret}.\n\n#{resp}
+        to force an update, visit jdems.us/admin/update?secret=#{secret()}.\n\n#{resp}
       )
     else
       text conn, ~s(
@@ -59,7 +59,7 @@ defmodule Shorten.GetController do
         hello shortlink user! we just updated. to verify that your update
         has completed or to further diagnose issues, visit
 
-        -> jdems.us/admin?secret=#{secret}.
+        -> jdems.us/admin?secret=#{secret()}.
       )
     else
       text conn, ~s(
@@ -72,5 +72,20 @@ defmodule Shorten.GetController do
     text conn, ~s(
       missing secret – proper usage is jdems.us/admin/update?secret=secretfromben
     )
+  end
+
+  def default_redirect(path = "/" <> rest) do
+    {int, _} = Integer.parse(rest)
+    string_int_string = "#{int}"
+
+    if string_int_string == rest do
+      "https://go.justicedemocrats.com/event/event/#{int}"
+    else
+      "https://justicedemocrats.com"
+    end
+  end
+
+  def default_redirect(_) do
+    "https://justicedemocrats.com"
   end
 end
